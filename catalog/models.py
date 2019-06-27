@@ -7,11 +7,11 @@ import uuid
 class Genre(models.Model):
    
     name = models.CharField(max_length=200, help_text="Enter a book genre (e.g. Science Fiction, French Poetry etc.)")
-
+    
 
     def __str__(self):
        
-        return self.fname
+        return self.name
 
 
 
@@ -27,7 +27,12 @@ class Book(models.Model):
     
     def __str__(self):
         return self.title
-    
+    def display_genre(self):
+        """
+        Creates a string for the Genre. This is required to display genre in Admin.
+        """
+        return ', '.join([ genre.name for genre in self.genre.all()[:3] ])
+    display_genre.short_description = 'Genre'
     
     def get_absolute_url(self):
         """
@@ -88,3 +93,4 @@ class Author(models.Model):
         String for representing the Model object.
         """
         return '%s, %s' % (self.last_name, self.first_name)
+
