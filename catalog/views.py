@@ -16,12 +16,22 @@ def index(request):
     num_authors=Author.objects.count()
     num_books_pig = Book.objects.filter(title__icontains = 'pig'.lower()).count() 
     
+
+
+
+    # Number of visits to this view, as counted in the session variable.
+    num_visits=request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits+1
+    
+
+
     # Отрисовка HTML-шаблона index.html с данными внутри 
     # переменной контекста context
     return render(
         request,
         'index.html',
-        context={'num_books':num_books,'num_instances':num_instances,'num_instances_available':num_instances_available,'num_authors':num_authors, 'pig_books': num_books_pig},
+        context={'num_books':num_books,'num_instances':num_instances,'num_instances_available':num_instances_available,'num_authors':num_authors,
+            'num_visits':num_visits}, # num_visits appended
     )
 
 
@@ -48,6 +58,3 @@ class AuthorListView(generic.ListView):
 
 class AuthorDetailView(generic.DetailView):
     model = Author
-    def get_book_set(self):
-        return Book.objects.all()
-    
